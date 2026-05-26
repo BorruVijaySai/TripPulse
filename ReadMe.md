@@ -1,92 +1,163 @@
-# TripCraft – BTP README
+# TripPulse
 
-## Project Overview
+TripPulse is a multi-agent travel planning framework that generates personalized multi-day travel itineraries using Large Language Models (LLMs), review-grounded reasoning, and constraint-aware scheduling.
 
-TripCraft is a multi-agent travel itinerary generation framework that generates structured travel plans from natural language user queries. The framework uses multiple collaborative agents for itinerary planning and also supports review-grounded reasoning and pro-cons based itinerary generation.
+The framework explores two distinct planning pathways:
 
-The project supports:
-- Multi-agent itinerary planning
-- Review-grounded itinerary generation
-- With-review and without-review pipelines
-- JSON to JSONL conversion utilities
-- Automatic evaluation and qualitative analysis
+1. **LLM-Based Planning Pipeline**  
+   A generative scheduling pipeline where LLMs perform semantic reasoning, activity selection, and itinerary scheduling.
 
----
+2. **Deterministic Scheduling Pipeline**  
+   A rule-based algorithmic scheduler that enforces strict temporal and budget feasibility through programmatic execution.
 
-## Project Structure
-
-```bash
-TripCraft/
-│
-├── run.py
-├── run_review.py
-├── run_review_pro_cons.py
-├── jsonl.py
-├── requirements.txt
-├── agentic.yml
-│
-├── agentic_planning.py
-│
-├── evaluation/
-│   ├── eval.py
-│   ├── qualitative_metrics.py
-│   └── evaluate_rgpa.py
-│
-└── TripCraft_database/
-```
+The system combines modular agentic reasoning with structured scheduling to generate realistic, personalized, and feasible travel itineraries.
 
 ---
 
-## Features
+# Key Features
 
 - Multi-agent itinerary generation
-- Travel planning from natural language queries
-- Support for multiple LLM backends
-- Review-grounded planning
-- Pro-cons based reasoning
-- Automatic evaluation scripts
-- Qualitative and review-grounded metrics
+- Review-grounded recommendation reasoning
+- Constraint-aware travel scheduling
+- Hybrid LLM + deterministic architecture
+- Personalized itinerary generation
+- Multi-day trip planning
+- Temporal feasibility enforcement
+- Budget-aware planning
+- LLM-as-a-Judge evaluation framework
+- Modular orchestration pipeline
 
 ---
 
-## Dependencies
+# Architecture
 
-The project uses the following dependencies:
-
-```txt
-torch
-transformers
-accelerate
-openai
-pandas
-numpy
-tqdm
+```text
+User Query
+    ↓
+Global Orchestrator
+    ↓
+Domain-Specific Agents
+ ├── Accommodation Agent
+ ├── Transportation Agent
+ ├── Meals Agent
+ ├── Attraction Agent
+ └── Events Agent
+    ↓
+Planning Pathways
+ ├── LLM-Based Scheduler
+ └── Deterministic Scheduler
+    ↓
+Final Time-Ordered Itinerary
 ```
 
 ---
 
-## Environment Setup
+# Planning Pathways
 
-### 1. Clone the Repository
+## 1. LLM-Based Scheduling Pathway
 
-```bash
-git clone <repository_url>
-cd TripCraft
+The LLM-based pipeline performs:
+
+- Semantic itinerary reasoning
+- Dynamic activity selection
+- POI scheduling
+- Context-aware planning
+- Review-grounded decision making
+
+This pathway allows flexible itinerary generation using LLM reasoning while maintaining structured validation.
+
+---
+
+## 2. Deterministic Scheduling Pathway
+
+The deterministic pipeline performs:
+
+- Rule-based scheduling
+- Temporal constraint enforcement
+- Transit buffer validation
+- Budget-safe execution
+- Greedy slot assignment
+
+This pathway guarantees strict feasibility through programmatic scheduling logic.
+
+---
+
+# Multi-Agent Framework
+
+TripPulse decomposes itinerary generation into specialized agents operating on localized contexts:
+
+- Accommodation selection
+- Transportation planning
+- Restaurant recommendation
+- Attraction ranking
+- Event filtering
+
+This decomposition reduces reasoning overload and improves planning reliability.
+
+---
+
+# Review-Grounded Planning
+
+The framework augments structured travel data with large-scale review information to capture experiential travel signals such as:
+
+- Safety
+- Comfort
+- Crowding
+- Ambiance
+- Service quality
+- Traveler suitability
+
+Reviews are distilled into structured **Pros** and **Cons** representations for efficient downstream reasoning.
+
+---
+
+# Supported Models
+
+Current supported model identifiers:
+
+```python
+"mistral"
+"llama"
+"deepseek"
 ```
 
-### 2. Create Conda Environment
+---
 
-```bash
-conda env create -f agentic.yml
+# Repository Structure
+
+```text
+TripPulse/
+│
+├── agentic_trip/
+├── core/
+├── evaluation/
+├── prompts/
+├── postprocess/
+├── tools/
+├── run.py
+├── run_review_pro_cons.py
+└── README.md
 ```
 
-Activate the environment:
+---
+
+# Installation
+
+Clone the repository:
 
 ```bash
-conda activate agentic
+git clone https://github.com/BorruVijaySai/TripPulse.git
+cd TripPulse
 ```
 
-### 3. Install Required Packages
+Create environment:
+
+```bash
+conda create -n trippulse python=3.10
+conda activate trippulse
+```
+
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -94,199 +165,210 @@ pip install -r requirements.txt
 
 ---
 
-## Dataset / Database Setup
-
-Before execution, download the `TripCraft_database` from the following Google Drive link:
-
-Dataset Link:  
-https://drive.google.com/drive/folders/1k2rz7-oBd8qKFBZR-0Nl-OVjjYSAK-OH
-
-After downloading, place the database inside the project directory.
-
-Expected structure:
+# Environment Variables
 
 ```bash
-TripCraft/
-└── TripCraft_database/
+export OPENAI_API_KEY=your_key
+export GEMINI_API_KEY=your_key
+export HF_TOKEN=your_token
 ```
+
 ---
 
-## Results / Sample Outputs
+# Running the Framework
 
-Generated sample outputs and result JSON/JSONL files can be accessed from the following Google Drive link:
+TripPulse supports two execution pathways.
 
-Results Folder:  
-https://drive.google.com/drive/folders/1lEK4p-PIEVLu2nDy2SrQfPhD5BbdjBqh
+---
 
-This folder contains:
-- Generated itineraries
-- JSONL converted files
-- Evaluation result files
+## 1. Standard Planning Pipeline
 
-
-## Execution Instructions
-
-### A. Running Without Reviews
+Run:
 
 ```bash
 python run.py
 ```
 
-#### Required Configuration
+### Configure Model and Trip Duration
 
-Inside `run.py`:
-- Initialize the required model
-- Configure the required day type
+Inside `run.py`, configure:
 
-Inside `agentic_planning.py`:
-- Set the start index
-- Set the end index
+```python
+MODEL_NAME = "mistral"   # mistral | llama | deepseek
+DAY_TYPES = [3,5,7]
+```
+
+Example:
+
+```python
+MODEL_NAME = "llama"
+DAY_TYPES = [5]
+```
 
 ---
 
-### B. Running With Reviews
+## 2. Review-Grounded Pros/Cons Pipeline
 
-```bash
-python run_review.py
-```
-
-or
+Run:
 
 ```bash
 python run_review_pro_cons.py
 ```
 
-#### Required Configuration
+### Configure Model and Trip Duration
 
-Before execution:
-- Initialize the desired model
-- Configure day type settings
-- Set start and end indices inside `agentic_planning.py`
+Inside `run_review_pro_cons.py`, configure:
 
----
-
-## JSON to JSONL Conversion
-
-Convert generated JSON outputs into JSONL format using:
-
-```bash
-python jsonl.py --model <model_name> --day <day_number>
+```python
+MODEL_NAME = "mistral"   # mistral | llama | deepseek
+DAY_TYPES = [3,5,7]
 ```
 
 Example:
 
-```bash
-python jsonl.py --model llama --day 3
+```python
+MODEL_NAME = "deepseek"
+DAY_TYPES = [7]
 ```
 
 ---
 
-## Evaluation
+# DAY_TYPES Configuration
 
-Move to the evaluation directory:
+`DAY_TYPES` controls itinerary duration generation.
+
+Examples:
+
+```python
+DAY_TYPES = [3]
+```
+
+Generates only 3-day itineraries.
+
+```python
+DAY_TYPES = [5,7]
+```
+
+Generates both 5-day and 7-day itineraries.
+
+```python
+DAY_TYPES = [3,5,7]
+```
+
+Generates all trip durations.
+
+---
+
+# Evaluation
+
+Go to evaluation directory:
 
 ```bash
 cd evaluation
 ```
 
-### 1. Standard Evaluation
+---
+
+## 1. Structural Constraint Metrics
+
+Run:
 
 ```bash
-python eval.py --set_type <day_type> --evaluation_file_path <path_to_file>
+python eval.py --set_type <3/5/7> --evaluation_file_path "generated_file_path"
 ```
 
 Example:
 
 ```bash
-python eval.py --set_type 3day --evaluation_file_path outputs/result.jsonl
+python eval.py --set_type 5 --evaluation_file_path "../outputs/mistral_5day.json"
 ```
+
+This evaluates:
+
+- Structural validity
+- Constraint satisfaction
+- Budget feasibility
+- Entity correctness
 
 ---
 
-### 2. Qualitative Metrics Evaluation
+## 2. Temporal and Continuity Metrics
+
+Run:
 
 ```bash
-python qualitative_metrics.py --gen_file <generated_file> --anno_file <golden_annotation_file>
+python qualitative_metrics.py --gen_file "generated_plan_path" --anno_file "golden_plan_path"
 ```
 
 Example:
 
 ```bash
-python qualitative_metrics.py --gen_file generated.jsonl --anno_file golden.jsonl
+python qualitative_metrics.py --gen_file "../outputs/generated.json" --anno_file "../golden/golden_5day.json"
 ```
+
+This evaluates:
+
+- Temporal consistency
+- Activity continuity
+- Travel flow coherence
+- Chronological correctness
 
 ---
 
-### 3. Review-Grounded Metrics Evaluation
+## 3. RGPA Review-Grounded Metrics
+
+Run:
 
 ```bash
-python evaluate_rgpa.py --gen_file <generated_file> --db_dir <database_path>
+python evaluate_llm_as_judge.py --model mistral --day 5
 ```
 
 Example:
 
 ```bash
-python evaluate_rgpa.py --gen_file generated.jsonl --db_dir ../TripCraft_database
+python evaluate_llm_as_judge.py --model deepseek --day 7
 ```
 
----
-
-## Configuration Notes
-
-### Model Initialization
-
-Before running experiments:
-- Initialize the required LLM/model
-- Configure API keys if required
-- Update model paths appropriately
-
----
-
-### Day Type Configuration
-
-Update day type settings inside:
-- `run.py`
-- `run_review.py`
-- `run_review_pro_cons.py`
-
----
-
-### Start and End Index Configuration
-
-Modify indices inside:
+Optional arguments:
 
 ```bash
-agentic_planning.py
+--llm
 ```
-
-This helps in:
-- Partial dataset execution
-- Parallel experimentation
-- Resuming interrupted runs
-
----
-
-## Output
-
-Generated itineraries are stored in JSON format and can later be converted into JSONL format for evaluation.
-
----
-
-## Research Context
-
-This project is developed as part of a Bachelor Thesis Project (BTP) focusing on:
-- Multi-agent systems
-- LLM-based planning
-- Travel itinerary generation
-- Review-grounded reasoning
-- Agentic AI workflows
-
----
-
-## Citation
-
-If using this project or dataset, please cite the corresponding TripCraft paper.
 
 Example:
 
-> Chaudhuri et al., "TripCraft: A Fine-Grained Spatio-Temporal Benchmark for Travel Planning", ACL 2025.
+```bash
+python evaluate_llm_as_judge.py --model llama --day 3 --llm
+```
+
+This evaluates:
+
+- Review-grounded persona alignment
+- Experiential quality
+- Personalization quality
+- Review-aware recommendation alignment
+
+---
+
+# Research Focus
+
+TripPulse explores:
+
+- Agentic AI systems
+- Multi-agent planning
+- Constraint-aware itinerary generation
+- Review-grounded recommendation systems
+- Hybrid deterministic + LLM scheduling
+- Personalized travel planning
+- Temporal reasoning for travel itineraries
+
+---
+
+# Notes
+
+- API keys should never be committed to the repository.
+- Large model inference may require GPU resources.
+- Some datasets and APIs are not included in the repository.
+- The repository is anonymized for research submission purposes.
+- The framework supports both deterministic and LLM-driven scheduling pipelines for comparative evaluation.
+```
