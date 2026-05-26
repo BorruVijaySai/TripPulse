@@ -131,10 +131,10 @@ Current supported model identifiers:
 TripPulse/
 │
 ├── agentic_trip/
+├── agentic_trip_with_pro_cons/
 ├── core/
 ├── evaluation/
 ├── prompts/
-├── postprocess/
 ├── tools/
 ├── run.py
 ├── run_review_pro_cons.py
