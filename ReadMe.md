@@ -116,11 +116,13 @@ Reviews are distilled into structured **Pros** and **Cons** representations for 
 Current supported model identifiers:
 
 ```python
-"mistral"
+"gpt5"
+"qwen2.5"
+"phi4"
 "llama"
+"mistral"
 "deepseek"
 ```
-
 ---
 
 # Repository Structure
@@ -146,7 +148,7 @@ TripPulse/
 Clone the repository:
 
 ```bash
-git clone https://github.com/BorruVijaySai/TripPulse.git
+git clone <repo_url>
 cd TripPulse
 ```
 
@@ -194,7 +196,7 @@ python run.py
 Inside `run.py`, configure:
 
 ```python
-MODEL_NAME = "mistral"   # mistral | llama | deepseek
+MODEL_NAME = "mistral"  
 DAY_TYPES = [3,5,7]
 ```
 
@@ -220,7 +222,7 @@ python run_review_pro_cons.py
 Inside `run_review_pro_cons.py`, configure:
 
 ```python
-MODEL_NAME = "mistral"   # mistral | llama | deepseek
+MODEL_NAME = "mistral"  
 DAY_TYPES = [3,5,7]
 ```
 
